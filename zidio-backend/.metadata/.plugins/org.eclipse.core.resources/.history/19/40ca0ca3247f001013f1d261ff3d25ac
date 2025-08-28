@@ -1,0 +1,18 @@
+package com.nt.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import com.nt.dto.JobDto;
+
+public interface IJobService {
+	public List<JobDto> getAllJobs();
+	public List<JobDto> searchByTitle(String title);
+	public List<JobDto> searchByCompanyName(String companyName);
+	public String postJob(JobDto dto);
+	public List<JobDto>yourPostedJobs();
+	public List<JobDto>jobsByRecuiterEmail(String recuiterEmail);
+	public List<Long>jobsIdsByRecuiterEmail();
+	public Long jobCount();
+	
+}

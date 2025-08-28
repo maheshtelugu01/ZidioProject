@@ -1,0 +1,109 @@
+package com.nt.rest;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.nt.dto.InternshipApplicationResponse;
+import com.nt.dto.InternshipResponse;
+import com.nt.dto.JobApplicationResponse;
+import com.nt.dto.JobResponse;
+import com.nt.service.IApplicationService;
+
+@RestController
+@RequestMapping("/api/application")
+public class ApplicationController {
+	@Autowired
+	private IApplicationService applicationService;
+	
+	
+	@PutMapping("/job/{jobId}/apply")
+	public ResponseEntity<String> applyJob(@PathVariable Long jobId){
+		return ResponseEntity.ok(applicationService.applyJob(jobId));
+	}
+	@PutMapping("/job/{id}/accept")
+	public ResponseEntity<String> acceptJob(@PathVariable Long id){
+		return ResponseEntity.ok(applicationService.acceptJob(id));
+	}
+	@PutMapping("/job/{id}/reject")
+	public ResponseEntity<String> rejectJob(@PathVariable Long id){
+		return ResponseEntity.ok(applicationService.rejectJob(id));
+	}
+	@GetMapping("/job/currentstudent")
+	public ResponseEntity<List<JobApplicationResponse>>getJobByStudentEmail(){
+		return ResponseEntity.ok(applicationService.getJobApplicationsByStudent());
+	}
+	@GetMapping("/job/findAll")
+	public ResponseEntity<List<JobResponse>>getJobsByAplliedOrNot(){
+		return ResponseEntity.ok(applicationService.getJobsByAppliedOrNot());
+	}
+	@GetMapping("/job/count")
+	public ResponseEntity<Long>getJobsCountByUser(){
+		return ResponseEntity.ok(applicationService.countjobApplicationsByUser());
+	}
+	@GetMapping("/internship/count")
+	public ResponseEntity<Long>getInternshipsCountByUser(){
+		return ResponseEntity.ok(applicationService.countInternshipApplicationsByUser());
+	}
+	@GetMapping("/internship/findAll")
+	public ResponseEntity<List<InternshipResponse>>getInternshipsByAplliedOrNot(){
+		return ResponseEntity.ok(applicationService.getInternshipsByAppliedOrNot());
+	}
+	@GetMapping("/job/{jobId}")
+	public ResponseEntity<List<JobApplicationResponse>>getByJobId(@PathVariable Long jobId){
+		return ResponseEntity.ok(applicationService.getJobApplicationsByJob(jobId));
+	}
+	@PutMapping("/internship/{internshipId}/apply")
+	public ResponseEntity<String> apply(@PathVariable Long internshipId){
+		return ResponseEntity.ok(applicationService.applyInternship(internshipId));
+	}
+	@PutMapping("/internship/{id}/accept")
+	public ResponseEntity<String> acceptInternship(@PathVariable Long id){
+		return ResponseEntity.ok(applicationService.acceptInternship(id));
+	}
+	@PutMapping("/internship/{id}/reject")
+	public ResponseEntity<String> rejectInternship(@PathVariable Long id){
+		return ResponseEntity.ok(applicationService.rejectInternship(id));
+	}
+
+	@GetMapping("/internship/currentstudent")
+	public ResponseEntity<List<InternshipApplicationResponse>>getInternByStudentEmail(){
+		return ResponseEntity.ok(applicationService.getInternApplicationsByStudent());
+	}
+	@GetMapping("/internship/{internshipId}")
+	public ResponseEntity<List<InternshipApplicationResponse>>getByInternshipId(@PathVariable Long internshipId){
+		return ResponseEntity.ok(applicationService.getInternApplicationsByJob(internshipId));
+	}
+	@GetMapping("/jobs")
+	public ResponseEntity<List<JobApplicationResponse>>getJobs(){
+		return ResponseEntity.ok(applicationService.getAllJobApplications());
+	}
+	@GetMapping("/internships")
+	public ResponseEntity<List<InternshipApplicationResponse>>getInternships(){
+		return ResponseEntity.ok(applicationService.getAllInternshipApplications());
+	}
+	@GetMapping("/jobs/Ids")
+	public ResponseEntity<List<JobApplicationResponse>>getAllJobsByIds(){
+		return ResponseEntity.ok(applicationService.getAllJobApplicationByIds());
+	}
+	@GetMapping("/internships/Ids")
+	public ResponseEntity<List<InternshipApplicationResponse>>getInternshipIds(){
+		return ResponseEntity.ok(applicationService.getAllInternshipApplicationsByIds());
+	}
+	@GetMapping("/internship/count")
+	public ResponseEntity<Long> internshipApplicationsCount(){
+		return ResponseEntity.ok(applicationService.internshipApplicationsCount());
+	}
+	@GetMapping("/job/count")
+	public ResponseEntity<Long> jobApplicationsCount(){
+		return ResponseEntity.ok(applicationService.jobApplicationsCount());
+	}
+	
+	
+}

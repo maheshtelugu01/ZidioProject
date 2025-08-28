@@ -1,0 +1,33 @@
+package com.nt.entity;
+
+import java.time.LocalDateTime;
+
+import com.nt.enums.SubscriptionStatus;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name="USER_PAYMENT_STATUS_TAB")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserSubscriptionStatus {
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long id;
+	private String email;
+	private Long planId;
+	private String planName;
+	private LocalDateTime subscriptionStart=LocalDateTime.now();
+	private LocalDateTime subscriptionEnd;
+	private SubscriptionStatus status;
+	private Integer maxApplications;
+	private Integer usedApplications=0;
+}

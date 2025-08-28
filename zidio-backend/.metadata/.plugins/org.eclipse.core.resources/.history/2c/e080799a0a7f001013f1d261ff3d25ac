@@ -1,0 +1,17 @@
+package com.nt.dto;
+
+import java.time.LocalDateTime;
+
+import com.nt.enums.SubscriptionStatus;
+
+import lombok.Data;
+
+@Data
+public class UserPaymentStatusDto {
+	private Long id;
+	private String email;
+	private Long planId;
+	private LocalDateTime subscriptionStart;
+	private LocalDateTime subscriptionEnd;
+	private SubscriptionStatus status;
+}

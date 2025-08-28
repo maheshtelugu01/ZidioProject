@@ -1,0 +1,84 @@
+package com.nt.serviceimpl;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.annotation.JmsListener;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
+
+import com.nt.client.StudentFindClient;
+import com.nt.client.UserFindClient;
+import com.nt.dto.EmailRequest;
+import com.nt.dto.NotificationDto;
+import com.nt.entity.Notification;
+import com.nt.repository.NotificationRepository;
+import com.nt.service.INotificationService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
+public class NofificationServiceImpl implements INotificationService {
+	@Autowired
+	private JavaMailSender mailSender;
+	@Autowired
+	private NotificationRepository notifyRepo;
+	@Autowired
+	private StudentFindClient studentClient;
+	@Autowired
+	private UserFindClient userClient;
+	@Autowired
+	private ModelMapper mapper;
+
+	@Override
+	public String sendEmail(EmailRequest req) {
+		log.info("sendEmail(-)-->EmailService");
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setTo(req.getTo());
+		message.setSubject(req.getSubject());
+		message.setText(req.getMessage());
+		message.setFrom("maheshtelugu01@gmail.com");
+		mailSender.send(message);
+		return "Email sent Successfully";
+	}
+	@JmsListener(destination="notification-topic")
+	 @Override
+	public void saveNotification(NotificationDto dto) {
+		Notification notification=new Notification();
+		if("all-users".equals(dto.getEmail())) {
+			List<String>allEmails=userClient.allUsersEmails();
+			for(String email:allEmails) {
+				notification.setEmail(email);
+				notification.setMessage(dto.getMessage());
+				notification.setSource(dto.getSource());
+				notifyRepo.save(notification);
+			}
+		}
+		else if("all-students".equals(dto.getEmail())) {
+			List<String>allEmails=studentClient.allStudentsEmails();
+			for(String email:allEmails) {
+				notification.setEmail(email);
+				notification.setMessage(dto.getMessage());
+				notification.setSource(dto.getSource());
+				notifyRepo.save(notification);
+			}
+		}
+		else {
+			notification.setEmail(dto.getEmail());
+			notification.setMessage(dto.getMessage());
+			notification.setSource(dto.getSource());
+			notifyRepo.save(notification);
+		}
+	}
+
+
+	@Override
+	public List<NotificationDto> getAllNotifications() {
+		String email=userClient.findUserEmail();
+		return notifyRepo.findByEmail(email).stream().map(noti->mapper.map(noti, NotificationDto.class)).collect(Collectors.toList());
+	}
+}

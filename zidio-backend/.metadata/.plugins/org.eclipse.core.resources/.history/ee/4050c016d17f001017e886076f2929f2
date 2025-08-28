@@ -1,0 +1,43 @@
+package com.nt.serviceimpl;
+
+import java.util.List;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.nt.client.UserFindClient;
+import com.nt.dto.UserStatusUpdateRequest;
+import com.nt.entity.User;
+import com.nt.service.IAdminService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
+public class AdminServiceImpl implements IAdminService {
+	@Autowired
+	private UserFindClient userClient;
+
+	@Override
+	public String activateUser(UserStatusUpdateRequest req) {
+		log.info("activateUser(-)-->AdminService");
+		String result = userClient.activateUser(req);
+		return result;
+	}
+
+	@Override
+	public String deactivateUser(UserStatusUpdateRequest req) {
+		log.info("deactivateUser(-)-->AdminService");
+		String result = userClient.deactivateUser(req);
+		return result;
+	}
+
+	@Override
+	public List<User> getAllUsers() {
+		log.info("getAllUsers(-)-->AdminService");
+		return userClient.getAllUsers();
+	}
+
+	
+}

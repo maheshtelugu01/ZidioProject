@@ -1,0 +1,14 @@
+#MS port number
+server.port=8090
+
+#Application name
+spring.application.name=ANALYSTICS-SERVICE
+
+
+#register with eureka server
+eureka.client.service-url.default-zone=http://localhost:8761/eureka
+ 
+resilience4j.circuitbreaker.instances.myService.slidingWindowSize=5
+resilience4j.circuitbreaker.instances.myService.minimumNumberOfCalls=3
+resilience4j.circuitbreaker.instances.myService.failureRateThreshold=50
+resilience4j.circuitbreaker.instances.myService.waitDurationInOpenState=10s

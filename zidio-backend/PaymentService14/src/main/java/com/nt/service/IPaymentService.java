@@ -1,0 +1,14 @@
+package com.nt.service;
+
+import java.io.IOException;
+import java.util.List;
+
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.nt.dto.PaymentDto;
+
+public interface IPaymentService {
+	public String makePayment(PaymentDto dto)throws IOException, Exception;
+	public List<PaymentDto> getAllPayments();
+
+}

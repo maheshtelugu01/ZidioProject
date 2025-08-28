@@ -1,0 +1,38 @@
+package com.nt.entity;
+
+import java.time.LocalDateTime;
+
+import com.nt.enums.PaymentStatus;
+import com.nt.enums.PaymentType;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name="PAYMENT_TAB")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Payment {
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long id;
+	private String email;
+	private Long planId;
+	private Integer transactionId;
+	private Integer amount;
+	private String currency;
+	@Enumerated(EnumType.STRING)
+	private PaymentStatus paymentStatus;
+	@Enumerated(EnumType.STRING)
+	private PaymentType paymentType;
+	private LocalDateTime paymentDate=LocalDateTime.now();
+}

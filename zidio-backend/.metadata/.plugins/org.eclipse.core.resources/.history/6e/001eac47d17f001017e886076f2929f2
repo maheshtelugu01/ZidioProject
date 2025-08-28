@@ -1,0 +1,9 @@
+package com.nt.dto;
+
+import lombok.Data;
+
+@Data
+public class UserStatusUpdateRequest {
+	private String email;
+	private boolean isActive;
+}

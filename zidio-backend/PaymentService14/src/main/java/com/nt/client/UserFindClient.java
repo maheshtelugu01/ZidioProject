@@ -1,0 +1,18 @@
+package com.nt.client;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@FeignClient(name="AUTH-SERVICE")
+//@Component
+public interface UserFindClient {
+	//@Autowired
+	//private RestTemplate template;
+	@GetMapping("/api/auth/user")
+	public String findUserEmail();
+	/*{
+		//RestTemplate template=new RestTemplate();
+		User user=template.getForObject("http://GATEWAY-SERVICE/api/auth/user",User.class);
+		return user;
+	}*/
+}

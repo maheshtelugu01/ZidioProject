@@ -1,0 +1,19 @@
+package com.nt.service;
+
+import java.util.List;
+
+import com.nt.dto.InternshipDto;
+
+public interface IInternshipService {
+	public List<InternshipDto> getAllInternships();
+	public List<InternshipDto> searchByTitle(String title);
+	public List<InternshipDto> searchByCompanyName(String companyName);
+	List<InternshipDto> getPostedInternships(String recuiterEmail);
+	List<InternshipDto> yourInternships();
+	List<Long> yourInternshipIds();
+	String postInternships(InternshipDto dto);
+	public Long internshipCount();
+	public Long countByUserEmail();
+	String deactivateInternship(Long id);
+	
+}

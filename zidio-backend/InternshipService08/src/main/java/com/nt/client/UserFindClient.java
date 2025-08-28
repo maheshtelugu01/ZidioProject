@@ -1,0 +1,14 @@
+package com.nt.client;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import com.nt.entity.User;
+
+@FeignClient("AUTH-SERVICE")
+public interface UserFindClient {
+	@GetMapping("/api/auth/user")
+	public String findUserEmail();
+	@GetMapping("/api/auth/currentuser")
+	public User findUser();
+}

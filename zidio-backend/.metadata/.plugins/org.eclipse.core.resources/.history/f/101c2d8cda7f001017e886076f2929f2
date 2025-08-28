@@ -1,0 +1,92 @@
+package com.nt.serviceimpl;
+
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.nt.client.FileFindClient;
+import com.nt.client.UserFindClient;
+import com.nt.dto.StudentDto;
+import com.nt.entity.Student;
+import com.nt.entity.User;
+import com.nt.repository.StudentRepository;
+import com.nt.service.IStudentService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
+public class StudentServiceImpl implements IStudentService {
+	@Autowired
+	private StudentRepository studentRepo;
+	@Autowired
+	private ModelMapper mapper;
+	@Autowired
+	private UserFindClient userClient;
+	@Autowired
+	private FileFindClient fileClient;
+	
+	@Override
+	public String saveStudent(StudentDto dto) {
+		log.info("saveStudent(-)-->StudentService");
+		// Student student=new Student();
+		User user = userClient.findUser();
+		Student student = studentRepo.findByEmail(user.getEmail()).orElse(new Student());
+		student.setName(dto.getName());
+		student.setEmail(user.getEmail());
+		student.setCourse(dto.getCourse());
+		student.setUniversity(dto.getUniversity());
+		student.setResumeUrl(dto.getResumeUrl());
+		student.setSkills(dto.getSkills());
+		student.setUser(user);
+		studentRepo.save(student);
+		template.convertAndSend("notification-topic",new NotificationDto(user.getEmail(),"Your Profile is Updated..","STUDENT-SERVICE"));
+		return "Student Profile got saved";
+	}
+
+	@Override
+	public StudentDto getStudent(String email) {
+		log.info("getStudent(-)-->StudentService");
+		Student s = studentRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("Student not Found"));
+		return mapper.map(s,StudentDto.class);
+	}
+
+	@Override
+	public List<StudentDto> findAll() {
+		log.info("getAllStudent(-)-->StudentService");
+		return studentRepo.findAll().stream().map(student -> mapper.map(student,StudentDto.class))
+				.collect(Collectors.toList());
+	}
+
+	 	@Override
+	public Long studentCount() {
+		log.info("studentCount(-)-->StudentService");
+		return studentRepo.count();
+	}
+	@Override
+	public String updateStudentResume(MultipartFile file)throws IOException {
+		log.info("updateStudentResume(-)-->StudentService");
+		String email=userClient.findUserEmail();
+		Student student=studentRepo.findByEmail(email).get();
+		Map<String,String>resp=fileClient.ResumeUrl(file);
+		System.out.println(resp.get("resumeUrl"));
+		student.setResumeUrl(resp.get("resumeUrl"));
+		studentRepo.save(student);
+		return "Resume Uploaded Successfully..";
+	}
+	@Override
+	public List<String> findAllEmails() {
+		log.info("updateStudentResume(-)-->StudentService");
+		List<String>allEmails=studentRepo.findAllEmails();
+		return allEmails;
+	}
+	 
+	 
+}

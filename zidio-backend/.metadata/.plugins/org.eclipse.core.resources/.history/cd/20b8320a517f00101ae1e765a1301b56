@@ -1,0 +1,19 @@
+package com.nt.repository;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.nt.entity.UserSubscriptionStatus;
+import com.nt.enums.SubscriptionStatus;
+
+public interface UserSubscriptionStatusRepository extends JpaRepository<UserSubscriptionStatus, Long> {
+
+	Optional<UserSubscriptionStatus> findByEmail(String email);
+	Optional<UserSubscriptionStatus> findByEmailAndSubscriptionStartBeforeAndSubscriptionEndAfter(String email,LocalDateTime now1,LocalDateTime now2);
+	Optional<UserSubscriptionStatus> findByEmailAndStatus(String email, SubscriptionStatus active);
+	List<UserSubscriptionStatus> findByPlanId(Long planId);
+	
+}

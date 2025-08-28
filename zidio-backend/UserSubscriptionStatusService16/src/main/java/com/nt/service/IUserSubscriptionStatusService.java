@@ -1,0 +1,14 @@
+package com.nt.service;
+
+import java.util.List;
+
+import com.nt.dto.SubscriptionStatusDto;
+import com.nt.dto.UserSubscriptionStatusDto;
+
+public interface IUserSubscriptionStatusService {
+	public String activateSubscription(Long planId);
+	public String incrementUserApplications();
+	public UserSubscriptionStatusDto getActiveSubscriptionByEmail();
+	public boolean checkUserStatus();
+	public List<SubscriptionStatusDto> allAvailableSubscriptions();
+}

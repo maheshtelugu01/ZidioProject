@@ -1,0 +1,41 @@
+package com.nt.serviceimpl;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.nt.dto.SubscriptionDto;
+import com.nt.entity.Subscription;
+import com.nt.repository.SubscriptionRepository;
+import com.nt.service.ISubscriptionService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
+public class SubscriptionServiceImpl implements ISubscriptionService {
+	@Autowired
+	private SubscriptionRepository subscriptionRepo;
+	@Autowired
+	private ModelMapper mapper;
+
+	@Override
+	public String createSubscription(SubscriptionDto dto) {
+		Subscription sub = new Subscription();
+		sub.setName(dto.getName());
+		sub.setPrice(dto.getPrice());
+		sub.setDescription(dto.getDescription());
+		sub.setDurationDays(dto.getDurationDays());
+		subscriptionRepo.save(sub);
+		return "Subscription Created Successfully..";
+	}
+
+	@Override
+	public List<SubscriptionDto> getAllSubscriptions() {
+		return subscriptionRepo.findAll().stream().map(sub->mapper.map(sub,SubscriptionDto.class)).collect(Collectors.toList());
+	}
+
+}

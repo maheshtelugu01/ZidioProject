@@ -1,0 +1,99 @@
+#server port
+server.port=9091
+
+#application name
+spring.application.name=GATEWAY-SERVICE
+
+#url to register with eureka server
+eureka.client.service-url.default-zone=http://localhost:8761/eureka
+
+#write entries for gateway routing
+spring.cloud.gateway.server.webflux.routes[0].id=AUTH-SERVICE
+spring.cloud.gateway.server.webflux.routes[0].uri=lb://AUTH-SERVICE
+spring.cloud.gateway.server.webflux.routes[0].predicates=Path=/api/auth/**
+
+#write entries for gateway routing
+spring.cloud.gateway.server.webflux.routes[1].id=STUDENT-SERVICE
+spring.cloud.gateway.server.webflux.routes[1].uri=lb://STUDENT-SERVICE
+spring.cloud.gateway.server.webflux.routes[1].predicates=Path=/api/student/**
+spring.cloud.gateway.server.webflux.routes[1].filters[0]=AuthenticationFilter
+
+
+#write entries for gateway routing
+spring.cloud.gateway.server.webflux.routes[2].id=RECUITER-SERVICE
+spring.cloud.gateway.server.webflux.routes[2].uri=lb://RECUITER-SERVICE
+spring.cloud.gateway.server.webflux.routes[2].predicates=Path=/api/recuiter/**
+spring.cloud.gateway.server.webflux.routes[2].filters[0]=AuthenticationFilter
+
+#write entries for gateway routing
+spring.cloud.gateway.server.webflux.routes[3].id=JOB-SERVICE
+spring.cloud.gateway.server.webflux.routes[3].uri=lb://JOB-SERVICE
+spring.cloud.gateway.server.webflux.routes[3].predicates=Path=/api/job/**
+spring.cloud.gateway.server.webflux.routes[3].filters[0]=AuthenticationFilter
+
+#write entries for gateway routing
+spring.cloud.gateway.server.webflux.routes[4].id=INTERNSHIP-SERVICE
+spring.cloud.gateway.server.webflux.routes[4].uri=lb://INTERNSHIP-SERVICE
+spring.cloud.gateway.server.webflux.routes[4].predicates=Path=/api/internship/**
+spring.cloud.gateway.server.webflux.routes[4].filters[0]=AuthenticationFilter
+
+
+#write entries for gateway routing
+spring.cloud.gateway.server.webflux.routes[5].id=APPLICATION-SERVICE
+spring.cloud.gateway.server.webflux.routes[5].uri=lb://APPLICATION-SERVICE
+spring.cloud.gateway.server.webflux.routes[5].predicates=Path=/api/application/**
+spring.cloud.gateway.server.webflux.routes[5].filters[0]=AuthenticationFilter
+
+#write entries for gateway routing
+spring.cloud.gateway.server.webflux.routes[6].id=ADMIN-SERVICE
+spring.cloud.gateway.server.webflux.routes[6].uri=lb://ADMIN-SERVICE
+spring.cloud.gateway.server.webflux.routes[6].predicates=Path=/api/admin/**
+spring.cloud.gateway.server.webflux.routes[6].filters[0]=AuthenticationFilter
+
+#write entries for gateway routing
+spring.cloud.gateway.server.webflux.routes[7].id=EMAIL-SERVICE
+spring.cloud.gateway.server.webflux.routes[7].uri=lb://EMAIL-SERVICE
+spring.cloud.gateway.server.webflux.routes[7].predicates=Path=/api/email/**
+spring.cloud.gateway.server.webflux.routes[7].filters[0]=AuthenticationFilter
+
+#write entries for gateway routing
+spring.cloud.gateway.server.webflux.routes[8].id=FILE-SERVICE
+spring.cloud.gateway.server.webflux.routes[8].uri=lb://FILE-SERVICE
+spring.cloud.gateway.server.webflux.routes[8].predicates=Path=/api/file/**
+spring.cloud.gateway.server.webflux.routes[8].filters[0]=AuthenticationFilter
+
+#write entries for gateway routing
+spring.cloud.gateway.server.webflux.routes[9].id=ANALYSTICS-SERVICE
+spring.cloud.gateway.server.webflux.routes[9].uri=lb://ANALYSTICS-SERVICE
+spring.cloud.gateway.server.webflux.routes[9].predicates=Path=/api/analystics/**
+spring.cloud.gateway.server.webflux.routes[9].filters[0]=AuthenticationFilter
+
+#write entries for gateway routing
+spring.cloud.gateway.server.webflux.routes[10].id=PAYMENT-SERVICE
+spring.cloud.gateway.server.webflux.routes[10].uri=lb://PAYMENT-SERVICE
+spring.cloud.gateway.server.webflux.routes[10].predicates=Path=/api/payment/**
+spring.cloud.gateway.server.webflux.routes[10].filters[0]=AuthenticationFilter
+
+#write entries for gateway routing
+spring.cloud.gateway.server.webflux.routes[11].id=SUBSCRIPTION-SERVICE
+spring.cloud.gateway.server.webflux.routes[11].uri=lb://SUBSCRIPTION-SERVICE
+spring.cloud.gateway.server.webflux.routes[11].predicates=Path=/api/subscription/**
+spring.cloud.gateway.server.webflux.routes[11].filters[0]=AuthenticationFilter
+
+#write entries for gateway routing
+spring.cloud.gateway.server.webflux.routes[12].id=USERSUBSCRIPTIONSTATUS-SERVICE
+spring.cloud.gateway.server.webflux.routes[12].uri=lb://USERSUBSCRIPTIONSTATUS-SERVICE
+spring.cloud.gateway.server.webflux.routes[12].predicates=Path=/api/usersubscriptionstatus/**
+spring.cloud.gateway.server.webflux.routes[12].filters[0]=AuthenticationFilter
+
+
+#write entries for gateway routing
+spring.cloud.gateway.server.webflux.routes[13].id=NOTIFICATION-SERVICE
+spring.cloud.gateway.server.webflux.routes[13].uri=lb://NOTIFICATION-SERVICE
+spring.cloud.gateway.server.webflux.routes[13].predicates=Path=/api/notification/**
+spring.cloud.gateway.server.webflux.routes[13].filters[0]=AuthenticationFilter
+
+spring.cloud.gateway.server.webflux.globalcors.corsConfigurations.[/**].allowedOrigins=http://localhost:5173
+spring.cloud.gateway.server.webflux.globalcors.corsConfigurations.[/**].allowedMethods=GET,POST,PUT,DELETE,OPTIONS
+spring.cloud.gateway.server.webflux.globalcors.corsConfigurations.[/*].allowedHeaders=
+spring.cloud.gateway.server.webflux.globalcors.corsConfigurations.[/**].allowCredentials=true

@@ -1,0 +1,51 @@
+package com.nt.entity;
+
+import java.time.LocalDate;
+
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name="internship_tab")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@SQLDelete(sql="UPDATE internship_tab SET deleted=true WHERE id=?")
+@Where(clause="deleted=false")
+public class Internship {
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long id;
+	@Column(length=50,nullable=false)
+	private String title;
+	@Column(length=100,nullable=false)
+	private String description;
+	@Column(length=100,nullable=false)
+	private String companyName;
+	@Column(length=50,nullable=false)
+	private String location;
+	@Column(length=50,nullable=false)
+	private LocalDate startDate=LocalDate.now();
+	@Column(length=50,nullable=false)
+	private Integer durationWeeks;
+	@Column(length=50,nullable=false)
+	private Double stipend;
+	
+	@ManyToOne
+	@JoinColumn(name="recuiter_id")
+	private User postedBy;
+	private Boolean deleted=false;
+}
+

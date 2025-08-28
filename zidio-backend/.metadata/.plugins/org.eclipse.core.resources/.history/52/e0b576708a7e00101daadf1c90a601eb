@@ -1,0 +1,27 @@
+#MS port number
+server.port=8091
+
+#Application name
+spring.application.name=PAYMENT-SERVICE
+
+
+#register with eureka server
+eureka.client.service-url.default-zone=http://localhost:8761/eureka
+
+
+#To link with config server
+spring.config.import=optional:configserver:
+
+
+spring.activemq.broker-url=tcp://localhost:61616
+spring.activemq.user=admin
+spring.activemq.password=admin
+spring.jms.pub-sub-domain=true
+spring.activemq.packages.trust-all=true
+
+
+#logging information
+logging.file.name=d:/zidio.txt
+logging.logback.rollingpolicy.max-file-size=15MB
+logging.logback.rollingpolicy.clean-history-on-start=true
+logging.level.root=INFO

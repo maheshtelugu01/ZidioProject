@@ -1,0 +1,15 @@
+package com.nt.client;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import com.nt.dto.SubscriptionDto;
+
+@FeignClient(name="USERSUBSCRIPTIONSTATUS-SERVICE")
+public interface UserSubscriptionStatusFindClient {
+	@PostMapping("/api/usersubscriptionstatus/increment")
+	public String findSubscription(@PathVariable Long id);
+	
+}

@@ -1,0 +1,13 @@
+package com.nt.service;
+
+import java.util.Optional;
+
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.nt.dto.UserPaymentStatusDto;
+
+public interface IUserPaymentStatusService {
+	public UserPaymentStatusDto assignSubscription(@RequestParam Long userId,@RequestParam Long planId);
+	public Optional<UserPaymentStatusDto> getStatusByUserEmail(String email);
+	public UserPaymentStatusDto getActiveSubscriptionByEmail(String email);
+}

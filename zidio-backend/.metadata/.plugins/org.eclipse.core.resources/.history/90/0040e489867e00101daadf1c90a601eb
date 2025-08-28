@@ -1,0 +1,53 @@
+package com.nt.serviceimpl;
+
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.nt.client.UserFindClient;
+import com.nt.dto.PaymentDto;
+import com.nt.entity.Payment;
+import com.nt.entity.User;
+import com.nt.enums.PaymentStatus;
+import com.nt.enums.PaymentType;
+import com.nt.repository.PaymentRepository;
+import com.nt.service.IPaymentService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
+public class PaymentServiceImpl implements IPaymentService {
+	@Autowired
+	private PaymentRepository paymentRepo;
+	@Autowired
+	private ModelMapper mapper;
+	@Autowired
+	private UserFindClient userClient;
+
+	@Override
+	public PaymentDto makePayment(@RequestBody PaymentDto dto)throws Exception {
+		User user = userClient.findUser();
+		Payment pay = new Payment();
+		pay.setUserId(user.getId());
+		pay.setPlanId(dto.getPlanId());
+		pay.setAmount(dto.getAmount());
+		pay.setCurrency(dto.getCurrency());
+		pay.setPaymentType(dto.getPaymentType());
+		pay.setTransactionId(new Random().nextInt(10000));
+		paymentRepo.save(pay);
+		return mapper.map(pay, PaymentDto.class);
+	}
+
+	@Override
+	public List<PaymentDto> getAllPayments() {
+		return paymentRepo.findAll().stream().map(pay -> mapper.map(pay, PaymentDto.class))
+				.collect(Collectors.toList());
+	}
+
+}

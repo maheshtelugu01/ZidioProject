@@ -1,0 +1,20 @@
+INDEX VERSION 1.4+D:\user1\zidio\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+3270617920.index
+980981328.index
+2569405024.index
+1709124327.index
+788595892.index
+2909262931.index
+2804957981.index
+1005817685.index
+2574910943.index
+74911044.index
+1548296092.index
+3832302194.index
+78338569.index
+3738277074.index
+2971667070.index
+89641606.index
+1947294590.index
+1126322023.index
+1260605649.index

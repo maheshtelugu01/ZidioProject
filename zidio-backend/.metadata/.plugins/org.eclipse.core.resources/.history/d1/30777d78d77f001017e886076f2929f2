@@ -1,0 +1,14 @@
+package com.nt.client;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import com.nt.entity.User;
+
+@FeignClient(name="APPLICATION-SERVICE")
+public interface ApplicationFindClient {
+	@GetMapping("/api/application/user/job/count")
+	public Long findJobApplicationsCount();
+	@GetMapping("/api/application/user/internship/count")
+	public Long findInternshipApplicationsCount();
+}

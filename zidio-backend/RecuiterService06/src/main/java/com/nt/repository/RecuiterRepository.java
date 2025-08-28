@@ -1,0 +1,12 @@
+package com.nt.repository;
+
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.nt.entity.Recuiter;
+@Repository
+public interface RecuiterRepository extends JpaRepository<Recuiter, Long> {
+	Optional<Recuiter> findByRecuiterEmail(String recuiterEmail);
+}

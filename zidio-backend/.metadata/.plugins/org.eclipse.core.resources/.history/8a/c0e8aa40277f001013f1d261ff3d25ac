@@ -1,0 +1,116 @@
+package com.nt.serviceimpl;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.stereotype.Service;
+
+import com.nt.client.UserFindClient;
+import com.nt.client.UserSubscriptionStatusFindClient;
+import com.nt.dto.JobDto;
+import com.nt.dto.NotificationDto;
+import com.nt.entity.Job;
+import com.nt.entity.User;
+import com.nt.repository.JobRepository;
+import com.nt.service.IJobService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
+public class JobServiceImpl implements IJobService {
+	@Autowired
+	private JobRepository jobRepo;
+	@Autowired
+	private ModelMapper mapper;
+	@Autowired
+	private UserFindClient userClient;
+	@Autowired
+	private JmsTemplate template;
+	@Autowired
+	private UserSubscriptionStatusFindClient subClient;
+
+	@Override
+	public List<JobDto> getAllJobs() {
+		log.info("getAllJobs(-)-->JobService");
+		return jobRepo.findAll().stream().map(job -> mapper.map(job, JobDto.class)).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<JobDto> searchByTitle(String title) {
+		log.info("searchByTitle(-)-->JobService");
+		return jobRepo.findByTitle(title).stream().map(job -> mapper.map(job, JobDto.class))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<JobDto> searchByCompanyName(String companyName) {
+		log.info("searchByCompanyName(-)-->JobService");
+		return jobRepo.findByCompanyName(companyName).stream().map(job -> mapper.map(job, JobDto.class))
+				.collect(Collectors.toList());
+	}
+	@Override
+	public String postJob(JobDto dto) {
+		log.info("postJob(-)-->JobService");
+		User user = userClient.findUser();
+		Long count=countByUserEmail();
+		if(subClient.activeSubscription()==null) {
+			if(count>=10) {
+				template.convertAndSend("notification-topic",new NotificationDto(user.getEmail(),"Free Applications limit is reachend U have no Active Plan.. Please Upgrade!","JOB-SERVICE"));
+			throw new RuntimeException("Free Applications limit is reachend U have no Active Plan.. Please Upgrade!");
+			}
+		}
+		Job job = new Job();
+		job.setTitle(dto.getTitle());
+		job.setDescription(dto.getDescription());
+		job.setCompanyName(dto.getCompanyName());
+		job.setLocation(dto.getLocation());
+		job.setJobType(dto.getJobType());
+		job.setDuration(dto.getDuration());
+		job.setSkills(dto.getSkills());
+		job.setPostedBy(user);
+		subClient.incrementApplicationCount();
+		jobRepo.save(job);
+		template.convertAndSend("notification-topic",new NotificationDto("all-students","Alert New JOB ** Posted..","JOB-SERVICE"));
+		//notifyClient.jobNotification("ALLERT JOB *** Posted");
+		return "Job Posted Successfully...";
+	}
+	 
+	@Override
+	public List<JobDto> yourPostedJobs() {
+		log.info("getPostedJob(-)-->JobService");
+		User user=userClient.findUser();
+		//RecuiterDto recuiter = recuiterClient.getRecuiterByEmail(recuiterEmail);
+		return jobRepo.findJobsByRecuiterEmail(user.getEmail()).stream()
+				.map(job -> mapper.map(job, JobDto.class)).collect(Collectors.toList());
+	}
+	@Override
+	public List<Long> jobsIdsByRecuiterEmail() {
+		log.info("jobIdByRecuiterEmail(-)-->JobService");
+		User user=userClient.findUser();
+		return jobRepo.findJobIdsByRecuiterEmail(user.getEmail());
+	}
+	@Override
+	public List<JobDto> jobsByRecuiterEmail(String recuiterEmail) {
+		log.info("jobsByRecuiterEmail(-)-->JobService");
+		return jobRepo.findJobsByRecuiterEmail(recuiterEmail).stream()
+				.map(job -> mapper.map(job, JobDto.class)).collect(Collectors.toList());
+	}
+	@Override
+	public Long jobCount() {
+		log.info("jobCount(-)-->JobService");
+		return jobRepo.count();
+	}
+	@Override
+	public Long countByUserEmail() {
+		log.info("countByUserEmail(-)-->JobService");
+		User user=userClient.findUser();
+		return jobRepo.countByUserEmail(user.getEmail());
+	}
+	 
+	
+}

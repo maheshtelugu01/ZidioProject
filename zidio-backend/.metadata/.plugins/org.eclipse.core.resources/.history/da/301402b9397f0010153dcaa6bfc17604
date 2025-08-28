@@ -1,0 +1,60 @@
+package com.nt.rest;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.nt.dto.JobDto;
+import com.nt.service.IJobService;
+
+@RestController
+@RequestMapping("/api/job")
+public class JobController {
+	@Autowired
+	private IJobService jobService;
+
+	@GetMapping("/findAll")
+	public ResponseEntity<List<JobDto>> getAllJobs() {
+		return ResponseEntity.ok(jobService.getAllJobs());
+	}
+
+	@GetMapping("/find/title/{title}")
+	public ResponseEntity<List<JobDto>> searchByTitle(@PathVariable String title) {
+		return ResponseEntity.ok(jobService.searchByTitle(title));
+
+	}
+	@GetMapping("/find/companyName/{companyName}")
+	public ResponseEntity<List<JobDto>> searchByCompanyName(@PathVariable String companyName) {
+		return ResponseEntity.ok(jobService.searchByCompanyName(companyName));
+	}
+	@GetMapping("/find/{recuiterEmail}")
+	public ResponseEntity<List<JobDto>>getJobsByRecuiter(@PathVariable String recuiterEmail){
+		return ResponseEntity.ok(jobService.jobsByRecuiterEmail(recuiterEmail));
+	}
+	@PostMapping("/post")
+	public ResponseEntity<String> postJob(@RequestBody JobDto dto){
+		return ResponseEntity.ok(jobService.postJob(dto));
+	}
+	
+	@GetMapping("/yourJobs")
+	public ResponseEntity<List<JobDto>>yourJobs(){
+		return ResponseEntity.ok(jobService.yourPostedJobs());
+	}
+	@GetMapping("/yourJobIds")
+	public ResponseEntity<List<Long>>yourJobIds(){
+		return ResponseEntity.ok(jobService.jobsIdsByRecuiterEmail());
+	}
+	
+	@GetMapping("/count")
+	public ResponseEntity<Long> jobCount(){
+		return ResponseEntity.ok(jobService.jobCount());
+	}
+	
+}

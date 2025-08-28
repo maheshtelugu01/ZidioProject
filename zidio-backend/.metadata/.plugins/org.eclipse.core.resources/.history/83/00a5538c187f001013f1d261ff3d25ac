@@ -1,0 +1,17 @@
+package com.nt.repository;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.nt.dto.UserPaymentStatusDto;
+import com.nt.entity.UserPaymentStatus;
+
+public interface UserPaymentStatusRepository extends JpaRepository<UserPaymentStatus, Long> {
+
+	Optional<UserPaymentStatusDto> findByEmail(String email);
+	Optional<UserPaymentStatusDto> findByEmailAndSubscriptionStartBeforeAndSubscriptionEndAfter(String email,LocalDateTime now1,LocalDateTime now2);
+	 
+	
+}

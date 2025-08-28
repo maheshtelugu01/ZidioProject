@@ -1,0 +1,14 @@
+package com.nt.client;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.nt.dto.UserPaymentStatusDto;
+
+@FeignClient(name="USERPAYMENTSTATUS-SERVICE")
+//@Component
+public interface UserPaymentStatusFindClient {
+	@PostMapping("/api/usersubscriptionstatus/assign")
+	public UserPaymentStatusDto assignSubscription(@RequestBody UserPaymentStatusDto dto);
+}

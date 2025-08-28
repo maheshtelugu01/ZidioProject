@@ -1,0 +1,20 @@
+package com.nt.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import com.nt.entity.Job;
+
+public interface JobRepository extends JpaRepository<Job, Long> {
+	List<Job> findByTitle(String title);
+	List<Job> findByCompanyName(String companyName);
+	@Query("SELECT j FROM Job j WHERE j.postedBy.email=:recuiterEmail")
+	List<Job> findJobsByRecuiterEmail(String recuiterEmail);
+	@Query("SELECT j.id FROM Job j WHERE j.postedBy.email=:recuiterEmail")
+	List<Long>findJobIdsByRecuiterEmail(String recuiterEmail);
+	@Query("SELECT count(j) FROM Job j WHERE j.postedBy.email=:recuiterEmail")
+	Long countByRecuiterEmail(String recuiterEmail);
+	
+}

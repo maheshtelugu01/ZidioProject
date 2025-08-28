@@ -1,0 +1,333 @@
+.card {
+  max-width: 600px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
+  padding: 0;
+}
+
+/* ===== Card Header ===== */
+.card-header {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  padding: 16px 20px;
+  text-align: center;
+}
+
+.card-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* ===== Card Body ===== */
+.card-body {
+  padding: 20px;
+}
+
+/* ===== Form Styling ===== */
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Input group */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Focus state */
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
+  outline: none;
+}
+
+/* ===== Footer & Buttons ===== */
+.card-footer {
+  text-align: right;
+  margin-top: 10px;
+}
+
+.card-footer button {
+  padding: 10px 18px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.card-footer button:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .card {
+    max-width: 95%;
+    margin: 20px auto;
+  }
+}
+.table-card {
+  max-width: 95%;
+  margin: 30px auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+/* ===== Header ===== */
+.table-header {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  padding: 16px 20px;
+}
+
+.table-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* ===== Table ===== */
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+  table-layout:fixed;
+}
+
+.custom-table th,
+.custom-table td {
+  padding: 12px 15px;
+  text-align: center;
+  font-size: 14px;
+  word-wrap:break-word;
+
+}
+
+.custom-table th {
+  background: #f3f4f6;
+  font-weight: 600;
+  color: #333;
+  
+}
+
+.custom-table tbody tr {
+  border-bottom: 1px solid #eee;
+  transition: background 0.2s ease;
+}
+
+.custom-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+/* ===== Action Button ===== */
+.action-btn {
+  padding: 6px 12px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.action-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .custom-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+.details-box {
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 20px 25px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  font-family: Arial, sans-serif;
+  
+}
+.details-box a{
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  display: inline-block;
+  max-width: 100%;
+}
+.details-title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 600;
+  color: #2563eb;
+  margin-bottom: 20px;
+}
+
+.details-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  
+}
+
+.details-item {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+  
+}
+
+.details-item:last-child {
+  border-bottom: none;
+}
+
+.label {
+  font-weight: 600;
+  color: #444;
+}
+
+.value {
+  color: #111;
+  text-align: right;
+}
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #1d4ed8; /* blue */
+  color: white;
+  padding: 14px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Top navigation */
+.topnav ul {
+  display: flex;
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.topnav .nav-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 400;
+  padding: 5px 6px;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+.topnav .nav-link:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.topnav .nav-link.active {
+  background: white;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+/* Main content */
+.content {
+  padding: 30px;
+  background: #f9fafb;
+  min-height: calc(100vh - 60px); /* full height minus header */
+}
+*/
+.content {
+  padding: 30px 50px;        /* space around the page content */
+  background: #f9fafc;       /* light gray background */
+  min-height: calc(100vh - 60px);
+}
+
+/* Heading styles */
+.content h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Form styles */
+.content form {
+  max-width: 500px;          /* keeps form centered */
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Input fields */
+.content input,
+.content textarea {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* Button style */
+.content button {
+  background: #2563eb;  /* blue */
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.content button:hover {
+  background: #1d4ed8;
+}
+button:disabled{
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}

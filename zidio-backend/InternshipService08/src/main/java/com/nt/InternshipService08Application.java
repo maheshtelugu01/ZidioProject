@@ -1,0 +1,48 @@
+package com.nt;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.Bean;
+import org.springframework.jms.annotation.EnableJms;
+import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import feign.RequestInterceptor;
+
+@SpringBootApplication
+@EnableDiscoveryClient
+@EnableFeignClients
+@EnableJms
+public class InternshipService08Application {
+	@Bean
+	public ModelMapper modelMapper() {
+		return new ModelMapper();
+	}
+	@Bean
+    public RequestInterceptor bearerTokenInterceptor() {
+        return template -> {
+            // Get the current request
+            RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+            if (requestAttributes != null) {
+                // Extract token from current request's Authorization header
+                String token = ((ServletRequestAttributes) requestAttributes)
+                    .getRequest()
+                    .getHeader("Authorization");
+                
+                // If token exists, add it to Feign request
+                if (StringUtils.hasText(token)) {
+                    template.header("Authorization", token);
+                }
+            }
+        };
+    }
+	public static void main(String[] args) {
+		SpringApplication.run(InternshipService08Application.class, args);
+	}
+
+}

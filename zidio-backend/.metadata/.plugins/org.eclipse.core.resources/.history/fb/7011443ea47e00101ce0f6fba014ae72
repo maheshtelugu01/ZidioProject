@@ -1,0 +1,85 @@
+package com.nt.serviceimpl;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.stereotype.Service;
+
+import com.nt.client.SubscriptionFindClient;
+import com.nt.client.UserFindClient;
+import com.nt.client.UserPaymentStatusFindClient;
+import com.nt.dto.NotificationDto;
+import com.nt.dto.PaymentDto;
+import com.nt.dto.SubscriptionDto;
+import com.nt.dto.UserPaymentStatusDto;
+import com.nt.entity.Payment;
+import com.nt.entity.User;
+import com.nt.enums.PaymentStatus;
+import com.nt.enums.SubscriptionStatus;
+import com.nt.repository.PaymentRepository;
+import com.nt.service.IPaymentService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
+public class PaymentServiceImpl implements IPaymentService {
+	private final Random random=new Random();
+	@Autowired
+	private PaymentRepository paymentRepo;
+	@Autowired
+	private ModelMapper mapper;
+	@Autowired
+	private JmsTemplate template;
+	@Autowired
+	private UserFindClient userClient;
+	@Autowired
+	private UserPaymentStatusFindClient statusClient;
+	@Autowired
+	private SubscriptionFindClient planClient;
+	
+	public PaymentStatus processPayment(PaymentDto dto) {
+		return random.nextBoolean()?PaymentStatus.SUCCESS:PaymentStatus.FAILED;
+	}
+	@Override
+	public String makePayment(PaymentDto dto)throws Exception {
+		User user = userClient.findUser();
+		Payment pay = new Payment();
+		pay.setEmail(user.getEmail());
+		SubscriptionDto plan=planClient.findSubscriptionPlan(dto.getPlanId());
+		pay.setPlanId(dto.getPlanId());
+		pay.setAmount(dto.getAmount());
+		pay.setCurrency(dto.getCurrency());
+		PaymentStatus paymentStatus=processPayment(dto);
+		pay.setPaymentType(dto.getPaymentType());
+		pay.setPaymentStatus(paymentStatus);
+		pay.setTransactionId(new Random().nextInt(10000));
+		UserPaymentStatusDto dto1=new UserPaymentStatusDto();
+		dto1.setPlanId(dto.getPlanId());
+		dto1.setEmail(user.getEmail());
+		dto1.setSubscriptionStart(LocalDateTime.now());
+		if(paymentStatus==PaymentStatus.SUCCESS) {
+			dto1.setSubscriptionEnd(LocalDateTime.now().plusDays(plan.getDurationDays()));
+			dto1.setStatus(SubscriptionStatus.ACTIVE);
+		}else {
+			dto1.setSubscriptionEnd(LocalDateTime.now());
+			dto1.setStatus(SubscriptionStatus.PENDING);
+		}
+		statusClient.assignSubscription(dto1);
+		paymentRepo.save(pay);
+		template.convertAndSend("notification-topic",new NotificationDto(user.getEmail(),"Your Payment Was '"+paymentStatus+"'","PAYMENT-SERVICE"));
+		return paymentStatus.toString();
+	}
+
+	@Override
+	public List<PaymentDto> getAllPayments() {
+		return paymentRepo.findAll().stream().map(pay -> mapper.map(pay, PaymentDto.class))
+				.collect(Collectors.toList());
+	}
+
+}

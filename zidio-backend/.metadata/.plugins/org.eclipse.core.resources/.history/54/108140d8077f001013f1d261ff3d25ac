@@ -1,0 +1,81 @@
+package com.nt.serviceimpl;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.nt.client.InternshipFindClient;
+import com.nt.client.JobFindClient;
+import com.nt.client.UserFindClient;
+import com.nt.dto.RecuiterDto;
+import com.nt.entity.Recuiter;
+import com.nt.entity.User;
+import com.nt.repository.RecuiterRepository;
+import com.nt.service.IRecuiterService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
+public class RecuiterServiceImpl implements IRecuiterService {
+	@Autowired
+	private RecuiterRepository recuiterRepo;
+	@Autowired
+	private UserFindClient userClient;
+	@Autowired
+	private InternshipFindClient internshipClient;
+	@Autowired
+	private JobFindClient jobClient;
+
+	@Override
+	public String saveProfile(RecuiterDto dto) {
+		log.info("saveProfile(-)-->RecuiterService");
+		User user = userClient.findUser();
+		Recuiter recuiter = recuiterRepo.findByRecuiterEmail(user.getEmail()).orElse(new Recuiter());
+		recuiter.setCompanyName(dto.getCompanyName());
+		recuiter.setRecuiterEmail(user.getEmail());
+		recuiter.setRecuiterName(dto.getRecuiterName());
+		recuiter.setDesignation(dto.getDesignation());
+		recuiter.setLinkedInUrl(dto.getLinkedInUrl());
+		recuiter.setUser(user);
+		recuiterRepo.save(recuiter);
+		return "Recuiter Profile got Saved";
+	}
+
+	@Override
+	public RecuiterDto getByRecuiterEmail(String recuiterEmail) {
+		log.info("getByRecuiterEmail(-)-->RecuiterService");
+		Recuiter recuiter = recuiterRepo.findByRecuiterEmail(recuiterEmail).get();
+		if (recuiter == null) {
+			throw new RuntimeException("Recuiter not found");
+		}
+		return map(recuiter);
+	}
+
+	@Override
+	public List<RecuiterDto> getAllRecuiters() {
+		log.info("getAllRecuiters(-)-->RecuiterService");
+		return recuiterRepo.findAll().stream().map(recuiter -> map(recuiter))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public Long recuiterCount() {
+		log.info("recuiterCount(-)-->RecuiterService");
+		return recuiterRepo.count();
+	}
+	public RecuiterDto map(Recuiter dto) {
+		RecuiterDto recuiter=new RecuiterDto();
+		recuiter.setCompanyName(dto.getCompanyName());
+		recuiter.setRecuiterEmail(dto.getRecuiterEmail());
+		recuiter.setRecuiterName(dto.getRecuiterName());
+		recuiter.setDesignation(dto.getDesignation());
+		recuiter.setLinkedInUrl(dto.getLinkedInUrl());
+		recuiter.setId(dto.getId());
+		recuiter.setJobApplications(jobClient.findJobApplicationsCount());
+		recuiter.setInternshipApplications(internshipClient.findInternshipApplicationsCount());
+		return recuiter;
+	}
+}

@@ -1,0 +1,12 @@
+package com.nt.client;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+
+@FeignClient(name="USERSUBSCRIPTIONSTATUS-SERVICE")
+//@Component
+public interface UserPaymentStatusFindClient {
+	@PostMapping("/api/usersubscriptionstatus/assign/{planId}")
+	public String createSubscription(@PathVariable Long planId);
+}

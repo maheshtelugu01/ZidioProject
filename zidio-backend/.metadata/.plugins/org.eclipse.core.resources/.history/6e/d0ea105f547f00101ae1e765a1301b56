@@ -1,0 +1,40 @@
+package com.nt.rest;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.nt.dto.UserSubscriptionStatusDto;
+import com.nt.service.IUserSubscriptionStatusService;
+
+@RestController
+@RequestMapping("/api/usersubscriptionstatus")
+public class UserSubscriptionStatusController {
+	@Autowired
+	private IUserSubscriptionStatusService statusService;
+	@PostMapping("/increment")
+	public ResponseEntity<String> increment() {
+		return ResponseEntity.ok(statusService.incrementUserApplications());
+	}
+	@PostMapping("/assign/{planId}")
+	public ResponseEntity<String> activate(@PathVariable Long planId) {
+		return ResponseEntity.ok(statusService.activateSubscription(planId));
+	}
+	@GetMapping("/active")
+	public ResponseEntity<UserSubscriptionStatusDto> getActiveSubscription() {
+		return ResponseEntity.ok(statusService.getActiveSubscriptionByEmail());
+	}
+	@GetMapping("/status/active")
+	public ResponseEntity<Boolean> checkUserStatus() {
+		return ResponseEntity.ok(statusService.checkUserStatus());
+	}
+	
+	
+}

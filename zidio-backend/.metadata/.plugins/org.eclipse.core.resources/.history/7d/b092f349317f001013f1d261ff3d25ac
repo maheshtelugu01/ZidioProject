@@ -1,0 +1,98 @@
+package com.nt.serviceimpl;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.stereotype.Service;
+
+import com.nt.client.SubscriptionFindClient;
+import com.nt.client.UserFindClient;
+import com.nt.dto.NotificationDto;
+import com.nt.dto.SubscriptionDto;
+import com.nt.dto.UserSubscriptionStatusDto;
+import com.nt.entity.User;
+import com.nt.entity.UserSubscriptionStatus;
+import com.nt.enums.SubscriptionStatus;
+import com.nt.repository.UserSubscriptionStatusRepository;
+import com.nt.service.IUserSubscriptionStatusService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
+public class UserSubscriptionStatusServiceImpl implements IUserSubscriptionStatusService {
+	@Autowired
+	private UserSubscriptionStatusRepository statusRepo;
+	@Autowired
+	private ModelMapper mapper;
+	@Autowired
+	private UserFindClient userClient;
+	@Autowired
+	private JmsTemplate template;
+	@Autowired
+	private SubscriptionFindClient planClient;
+
+	@Override
+	public String activateSubscription(Long planId) {
+		User user=userClient.findUser();
+		SubscriptionDto dto=planClient.findSubscription(planId);
+		Optional<UserSubscriptionStatus> activeSub=statusRepo.findByEmailAndStatus(user.getEmail(),SubscriptionStatus.ACTIVE);
+		UserSubscriptionStatus status;
+		if(activeSub.isPresent()) {
+			status=activeSub.get();
+			status.setPlanId(planId);
+			status.setStatus(SubscriptionStatus.ACTIVE);
+			status.setSubscriptionStart(LocalDateTime.now());
+			status.setSubscriptionEnd(LocalDateTime.now().plusDays(dto.getDurationDays()));
+			status.setMaxApplications(dto.getMaxApplications());
+			status.setUsedApplications(0);
+		}
+		else {
+			status=new UserSubscriptionStatus();
+			status.setEmail(user.getEmail());
+			status.setStatus(SubscriptionStatus.ACTIVE);
+			status.setSubscriptionStart(LocalDateTime.now());
+			status.setSubscriptionEnd(LocalDateTime.now().plusDays(dto.getDurationDays()));
+			status.setMaxApplications(dto.getMaxApplications());
+			status.setUsedApplications(0);
+		}
+		statusRepo.save(status);
+		template.convertAndSend("notification-topic",new NotificationDto(user.getEmail(),"Your Subscription has '"+status.getStatus()+"' Updated..","USERSUBSCRIPTIONSTATUS-SERVICE"));
+		return "your Subscription Updated as Active";
+	}
+	@Override
+	public String incrementUserApplications() {
+		User user=userClient.findUser();
+		UserSubscriptionStatus activeSub=statusRepo.findByEmailAndStatus(user.getEmail(),SubscriptionStatus.ACTIVE).orElseThrow(()->new RuntimeException("No Active Subscription"));
+		if(activeSub.getSubscriptionEnd().isBefore(LocalDateTime.now())) {
+			activeSub.setStatus(SubscriptionStatus.EXPIRED);
+			statusRepo.save(activeSub);
+			template.convertAndSend("notification-topic",new NotificationDto(user.getEmail(),"Your Subscription has Expired..","USERSUBSCRIPTIONSTATUS-SERVICE"));
+			throw new RuntimeException("Subscrption Expired...");
+		}
+		int maxApplications=activeSub.getMaxApplications();
+		if(activeSub.getUsedApplications()>=maxApplications) {
+			template.convertAndSend("notification-topic",new NotificationDto(user.getEmail(),"Your Max Applications Reached..","USERSUBSCRIPTIONSTATUS-SERVICE"));
+			throw new RuntimeException("Maximum applications Reached");
+			
+		}
+		activeSub.setUsedApplications(activeSub.getUsedApplications()+1);
+		statusRepo.save(activeSub);
+		return "Your Application Accepted";
+	}
+	@Override
+	public UserSubscriptionStatusDto getActiveSubscriptionByEmail() {
+		User user=userClient.findUser();
+		LocalDateTime now=LocalDateTime.now();
+		return statusRepo.findByEmailAndSubscriptionStartBeforeAndSubscriptionEndAfter(user.getEmail(), now, now).get();
+	}
+	@Override
+	public boolean checkUserStatus() {
+		User user=userClient.findUser();
+		return statusRepo.findByEmailAndStatus(user.getEmail(),SubscriptionStatus.ACTIVE).isPresent();
+	}
+
+}

@@ -1,0 +1,16 @@
+package com.nt.client;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.nt.dto.SubscriptionDto;
+
+@FeignClient(name="SUBSCRIPTION-SERVICE")
+public interface SubscriptionFindClient {
+	@GetMapping("/api/subscription/plan/{id}")
+	public SubscriptionDto findSubscription(@PathVariable Long id);
+	@GetMapping("/api/subscription/plans")
+	public SubscriptionDto findAllSubscription();
+	
+}

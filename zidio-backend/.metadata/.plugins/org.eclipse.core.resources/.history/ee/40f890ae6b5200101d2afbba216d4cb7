@@ -1,0 +1,20 @@
+package com.zidio.dto;
+
+import com.zidio.entity.Internship;
+import com.zidio.entity.Job;
+import com.zidio.entity.User;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class ApplicationRequest {
+	private User student;
+	private Job job;
+	private Internship internship;
+}

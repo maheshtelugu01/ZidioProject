@@ -1,0 +1,5 @@
+package com.nt.enums;
+
+public enum PaymentType {
+	CREDITCARD,DEBITCATD,UPI,RAZORPAY,NETBANKING
+}

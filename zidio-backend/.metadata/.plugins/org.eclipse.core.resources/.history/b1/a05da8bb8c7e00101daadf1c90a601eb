@@ -1,0 +1,10 @@
+package com.nt.service;
+
+import java.util.Optional;
+
+import com.nt.dto.UserPaymentStatusDto;
+
+public interface IUserPaymentStatusService {
+	public UserPaymentStatusDto assignSubscription(Long planId);
+	public Optional<UserPaymentStatusDto> getStatusByUserId(Long id);
+}

@@ -1,0 +1,9 @@
+package com.zidio.dto;
+
+import com.zidio.entity.User;
+
+public class ApplicationRequest {
+	private User student;
+	private Job job;
+	private Internship internship;
+}
